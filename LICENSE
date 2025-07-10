@@ -1,0 +1,73 @@
+MIT License
+
+Copyright (c) 2025 Crypto Trading Bot
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+================================================================================
+
+ADDITIONAL TERMS AND CONDITIONS FOR CRYPTO TRADING BOT
+
+1. TRADING DISCLAIMER
+   This software is provided for EDUCATIONAL and INFORMATIONAL purposes only.
+   The software does NOT execute trades automatically and does NOT guarantee
+   any profits or accuracy in trading signals.
+
+2. RISK WARNING
+   Cryptocurrency trading involves substantial risk of loss. Users should:
+
+   - Only trade with money they can afford to lose
+   - Always do their own research (DYOR)
+   - Consider consulting a financial advisor
+   - Use proper risk management techniques
+
+3. NO LIABILITY FOR TRADING LOSSES
+   The authors and contributors of this software shall NOT be liable for any
+   trading losses, financial damages, or any other losses that may result
+   from the use of this software or its trading signals.
+
+4. DATA PRIVACY
+   This software collects minimal user data for functionality purposes only.
+   No financial credentials, API keys, or sensitive personal information
+   is stored or transmitted by this software.
+
+5. THIRD-PARTY SERVICES
+   This software relies on third-party APIs (CoinGecko, Binance) for market
+   data. The availability and accuracy of these services are not guaranteed.
+
+6. COMPLIANCE
+   Users are responsible for ensuring their use of this software complies
+   with all applicable laws and regulations in their jurisdiction.
+
+================================================================================
+
+THIRD-PARTY ACKNOWLEDGMENTS
+
+This software uses the following open-source libraries and services:
+
+- Telethon: Telegram client library (MIT License)
+- aiohttp: Async HTTP client (Apache License 2.0)
+- aiosqlite: Async SQLite interface (MIT License)
+- python-dotenv: Environment variable management (BSD License)
+- CoinGecko API: Market data provider (Terms of Service apply)
+- Binance API: Alternative market data source (Terms of Service apply)
+- Tarikul-Islam-Anik/Animated-Fluent-Emojis: Animated emojis (MIT License)
+
+For full license texts of third-party components, please refer to their
+respective repositories and documentation.
