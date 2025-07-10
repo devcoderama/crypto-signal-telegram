@@ -1083,24 +1083,6 @@ async def cleanup_old_data():
 - **Telegram Support:** @crypto_bot_support (jika tersedia)
 - **Email:** support@yourdomain.com (untuk critical issues)
 
-### 💝 Support Development
-
-Jika bot ini bermanfaat untuk Anda, pertimbangkan untuk mendukung pengembangan:
-
-#### **Crypto Donations**
-- **USDT (BEP20):** `0x1bc6e7d2e025f57ff79917f5e72561327b751105`
-- **Network:** Binance Smart Chain (BSC)
-
-```
-💡 Donasi akan digunakan untuk:
-• Maintenance dan pengembangan fitur baru
-• Server hosting untuk API services
-• Improvement dokumentasi dan tutorial
-• Community support dan development
-```
-
-**Terima kasih atas dukungan Anda! 🙏**
-
 ### 📄 License & Legal
 
 #### **MIT License**
@@ -1162,3 +1144,63 @@ nano .env  # Fill API_ID, API_HASH, BOT_TOKEN, ADMIN_ID
 **Happy Trading! 🚀📈**
 
 > *Remember: This bot provides signals for educational purposes. Always DYOR and trade responsibly!*
+
+---
+
+<div align="center">
+
+## 💝 Support Development
+
+<img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Money%20Bag.png" alt="Money Bag" width="50" height="50" />
+
+### Jika bot ini bermanfaat untuk Anda, pertimbangkan untuk mendukung pengembangan:
+
+<img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Coin.png" alt="Coin" width="30" height="30" /> **Crypto Donations** <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Coin.png" alt="Coin" width="30" height="30" />
+
+<table>
+<tr>
+<td align="center">
+<img src="https://cryptologos.cc/logos/tether-usdt-logo.png" alt="USDT" width="40" height="40" />
+<br>
+<strong>USDT (BEP20)</strong>
+<br>
+<code>0x1bc6e7d2e025f57ff79917f5e72561327b751105</code>
+<br>
+<em>Binance Smart Chain (BSC)</em>
+</td>
+</tr>
+</table>
+
+### <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Light%20Bulb.png" alt="Light Bulb" width="25" height="25" /> Donasi akan digunakan untuk:
+
+<img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Gear.png" alt="Gear" width="20" height="20" /> Maintenance dan pengembangan fitur baru
+<br>
+<img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Desktop%20Computer.png" alt="Computer" width="20" height="20" /> Server hosting untuk API services
+<br>
+<img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Books.png" alt="Books" width="20" height="20" /> Improvement dokumentasi dan tutorial
+<br>
+<img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People/Busts%20in%20Silhouette.png" alt="Community" width="20" height="20" /> Community support dan development
+
+<br>
+
+### <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Hand%20gestures/Folded%20Hands%20Light%20Skin%20Tone.png" alt="Thank You" width="30" height="30" /> **Terima kasih atas dukungan Anda!**
+
+<img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Rocket.png" alt="Rocket" width="25" height="25" /> 
+<img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Chart%20Increasing.png" alt="Chart" width="25" height="25" />
+<img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Money%20with%20Wings.png" alt="Money with Wings" width="25" height="25" />
+
+</div>
+
+---
+
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Star.png" alt="Star" width="15" height="15" />
+<img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Star.png" alt="Star" width="20" height="20" />
+<img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Star.png" alt="Star" width="25" height="25" />
+**Made with** <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Red%20Heart.png" alt="Heart" width="20" height="20" /> **by Crypto Trading Bot Team**
+<img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Star.png" alt="Star" width="25" height="25" />
+<img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Star.png" alt="Star" width="20" height="20" />
+<img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Star.png" alt="Star" width="15" height="15" />
+
+</div>
