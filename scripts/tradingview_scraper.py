@@ -64,29 +64,28 @@ class TradingViewScraper:
         """
         try:
             logger.info(f"Fetching market data for {symbol} ({timeframe})")
-            
+
             # Try Binance API first
             price_data = await self._get_binance_24hr_ticker(symbol)
-            
+
             # If Binance fails, try CoinGecko
             if not price_data:
                 logger.info(f"Binance failed, trying CoinGecko for {symbol}")
                 price_data = await self._get_coingecko_price(symbol)
-            
+
             if not price_data:
-                logger.warning(f"All APIs failed for {symbol}, using mock data")
-                return self._generate_mock_data(symbol, timeframe)
-            
+                logger.warning(f"All APIs failed for {symbol}, no data available")
+                return None
+
             # Get kline data for technical analysis
             kline_data = await self._get_binance_klines(symbol, timeframe)
             if not kline_data:
-                logger.warning(f"No kline data for {symbol}, generating mock klines")
-                mock_price = float(price_data.get('lastPrice', price_data.get('current_price', 0)))
-                kline_data = self._generate_mock_klines(mock_price, 100)
-            
+                logger.warning(f"No kline data for {symbol}, cannot proceed")
+                return None
+
             # Calculate technical indicators
             technical_data = self._calculate_technical_indicators(kline_data)
-            
+
             # Format market data based on source
             if 'lastPrice' in price_data:  # Binance format
                 market_data = {
@@ -124,13 +123,13 @@ class TradingViewScraper:
                     'indicators': technical_data,
                     'raw_klines': kline_data[-20:]
                 }
-            
+
             logger.info(f"Successfully fetched data for {symbol}: ${market_data['price']['current']:,.2f}")
             return market_data
-            
+
         except Exception as e:
             logger.error(f"Error fetching market data for {symbol}: {e}")
-            return self._generate_mock_data(symbol, timeframe)
+            return None
 
     async def _get_binance_24hr_ticker(self, symbol: str) -> Optional[Dict]:
         """Get 24hr ticker data from Binance with retry logic"""
@@ -277,78 +276,6 @@ class TradingViewScraper:
 
         return None
     
-    def _generate_mock_data(self, symbol: str, timeframe: str) -> Dict[str, Any]:
-        """Generate mock data when API fails - using more realistic current prices"""
-        # Updated base prices (more current as of 2025)
-        base_prices = {
-            'BTCUSDT': 116000,  # More realistic current BTC price
-            'ETHUSDT': 3800,    # More realistic current ETH price
-            'BNBUSDT': 680,     # More realistic current BNB price
-            'ADAUSDT': 1.20,    # More realistic current ADA price
-            'XRPUSDT': 2.80,    # More realistic current XRP price
-            'SOLUSDT': 220,     # More realistic current SOL price
-            'DOTUSDT': 12.5,    # More realistic current DOT price
-            'DOGEUSDT': 0.42,   # More realistic current DOGE price
-            'AVAXUSDT': 68,     # More realistic current AVAX price
-            'MATICUSDT': 0.85,  # More realistic current MATIC price
-            'LINKUSDT': 28,     # More realistic current LINK price
-            'LTCUSDT': 140,     # More realistic current LTC price
-        }
-        
-        base_price = base_prices.get(symbol, 1000)  # Default to $1000 for unknown symbols
-        
-        # Add some pseudo-random variation (-5% to +5%)
-        price_variation = 0.9 + (0.2 * (hash(symbol + timeframe) % 100) / 100)
-        current_price = base_price * price_variation
-        
-        mock_klines = self._generate_mock_klines(current_price, 100)
-        technical_data = self._calculate_technical_indicators(mock_klines)
-        
-        # More realistic 24h change (-10% to +10%)
-        change_pct = -10 + (20 * (hash(symbol) % 100) / 100)
-        
-        logger.warning(f"Using mock data for {symbol}: ${current_price:,.2f}")
-        
-        return {
-            'symbol': symbol,
-            'timeframe': timeframe,
-            'timestamp': datetime.now(),
-            'price': {
-                'current': current_price,
-                'change': change_pct,
-                'change_abs': current_price * (change_pct / 100),
-                'high': current_price * 1.08,
-                'low': current_price * 0.92,
-                'open': current_price * (1 - change_pct / 100)
-            },
-            'volume': 50000 + (hash(symbol) % 1000000),  # More realistic volume
-            'indicators': technical_data,
-            'raw_klines': mock_klines[-20:]
-        }
-    
-    def _generate_mock_klines(self, current_price: float, count: int) -> List[Dict]:
-        """Generate mock kline data for technical analysis"""
-        klines = []
-        price = current_price * 0.95  # Start from 95% of current price
-        
-        for i in range(count):
-            # Simulate price movement
-            change = (hash(f"{i}_{current_price}") % 200 - 100) / 10000  # -1% to +1%
-            price = price * (1 + change)
-            
-            high = price * (1 + abs(change) * 2)
-            low = price * (1 - abs(change) * 2)
-            
-            klines.append({
-                'timestamp': datetime.now().timestamp() - (count - i) * 3600,  # 1 hour intervals
-                'open': price * 0.999,
-                'high': high,
-                'low': low,
-                'close': price,
-                'volume': 1000000 + (hash(f"vol_{i}") % 500000)
-            })
-        
-        return klines
     
     def _calculate_technical_indicators(self, klines: List[Dict]) -> Dict[str, Any]:
         """Calculate technical indicators from kline data"""
@@ -593,26 +520,8 @@ class TradingViewScraper:
     
     def _get_fallback_screener_data(self, limit: int) -> List[Dict[str, Any]]:
         """Get fallback screener data when API fails"""
-        popular_symbols = [
-            'BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'ADAUSDT', 'XRPUSDT',
-            'SOLUSDT', 'DOTUSDT', 'DOGEUSDT', 'AVAXUSDT', 'LUNAUSDT',
-            'MATICUSDT', 'LINKUSDT', 'LTCUSDT', 'UNIUSDT', 'ATOMUSDT',
-            'FTMUSDT', 'AXSUSDT', 'SANDUSDT', 'MANAUSDT', 'GALAUSDT'
-        ]
-        
-        screener_data = []
-        for symbol in popular_symbols[:limit]:
-            mock_data = self._generate_mock_data(symbol, '1h')
-            screener_data.append({
-                'symbol': symbol,
-                'price': mock_data['price']['current'],
-                'change_24h': mock_data['price']['change'],
-                'volume_24h': mock_data['volume'],
-                'high_24h': mock_data['price']['high'],
-                'low_24h': mock_data['price']['low']
-            })
-        
-        return screener_data
+        logger.warning("No screener data available from API, returning empty list.")
+        return []
     
     def _process_screener_item(self, item: Dict) -> Dict[str, Any]:
         """Process single screener item"""

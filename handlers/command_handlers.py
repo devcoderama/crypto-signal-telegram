@@ -335,40 +335,45 @@ User ID: `{user_id}`
         """Handle inline keyboard callbacks"""
         user_id = event.sender_id
         data = event.data.decode('utf-8')
-        
+
         try:
             # Log callback interaction
             await self.db.log_interaction(user_id, 'callback', data)
-            
+
             # Route callback to appropriate handler
             if data == "analyze_market":
                 await self.show_symbol_selection(event)
-            
+
+            elif data == "input_custom_symbol":
+                # Set user session state to wait for custom symbol input
+                self.user_sessions[user_id] = {'state': 'waiting_custom_symbol'}
+                await event.respond("✏️ Silakan ketik symbol yang ingin dianalisis (contoh: DOGEUSDT):")
+
             elif data.startswith("symbol_"):
                 symbol = data[7:]  # Remove "symbol_" prefix
                 await self.show_timeframe_selection(event, symbol)
-            
+
             elif data.startswith("tf_"):
                 timeframe = data[3:]  # Remove "tf_" prefix
                 await self.handle_timeframe_selection(event, timeframe)
-            
+
             elif data == "view_positions":
                 await self.handle_positions(event)
-            
+
             elif data == "price_alerts":
                 await self.handle_alerts(event)
-            
+
             elif data == "settings":
                 await self.handle_settings(event)
-            
+
             elif data == "back_main":
                 await self.show_main_menu(event)
-            
+
             elif data.startswith("admin_"):
                 await self.handle_admin_callback(event, data)
-            
+
             # Add more callback handlers as needed...
-            
+
         except Exception as e:
             logger.error(f"Error in callback handler: {e}")
             await event.edit("❌ Terjadi kesalahan. Silakan coba lagi.")
@@ -388,17 +393,22 @@ User ID: `{user_id}`
     async def show_symbol_selection(self, event):
         """Show symbol selection keyboard"""
         msg = "📊 **Pilih Cryptocurrency untuk Analisis**\n\nPilih symbol yang ingin dianalisis:"
-        
-        await event.edit(msg, buttons=self.keyboards.symbol_selection())
+        try:
+            await event.edit(msg, buttons=self.keyboards.symbol_selection())
+        except Exception as e:
+            logger.warning(f"event.edit failed in show_symbol_selection, fallback to reply: {e}")
+            await event.reply(msg, buttons=self.keyboards.symbol_selection())
     
-    async def show_timeframe_selection(self, event, symbol: str):
+    async def show_timeframe_selection(self, event, symbol: str, as_reply: bool = False):
         """Show timeframe selection for chosen symbol"""
         # Store symbol in user session
         self.user_sessions[event.sender_id] = {'symbol': symbol}
-        
+
         msg = f"📊 **{symbol}**\n\n⏰ Pilih timeframe untuk analisis:"
-        
-        await event.edit(msg, buttons=self.keyboards.timeframe_selection())
+        if as_reply:
+            await event.reply(msg, buttons=self.keyboards.timeframe_selection())
+        else:
+            await event.edit(msg, buttons=self.keyboards.timeframe_selection())
     
     async def handle_timeframe_selection(self, event, timeframe: str):
         """Handle timeframe selection and perform analysis"""
@@ -423,23 +433,24 @@ User ID: `{user_id}`
         try:
             # Show loading message
             loading_msg = await event.edit(f"🔄 Menganalisis {symbol} ({timeframe})...")
-            
+
             # Perform analysis using TradingView scraper
             async with TradingViewScraper() as scraper:
                 data = await scraper.get_market_data(symbol, timeframe)
-                
-                if not data:
+
+                # Jika data None atau kosong, JANGAN lanjut analisis, tampilkan error ke user
+                if not data or not isinstance(data, dict) or not data.get('price'):
                     await loading_msg.edit(
-                        f"❌ **Error**\n\n"
+                        f"❌ **Data Tidak Ditemukan**\n\n"
                         f"Tidak dapat mengambil data untuk {symbol}.\n"
-                        f"Pastikan symbol correct dan coba lagi.",
+                        f"Pastikan symbol benar dan tersedia di exchange/API.\n",
                         buttons=self.keyboards.symbol_selection()
                     )
                     return
-                
+
                 # Calculate trading signal
                 signal = TechnicalAnalysis.calculate_signal_strength(data)
-                
+
                 if signal['signal'] == 'ERROR':
                     await loading_msg.edit(
                         f"❌ **Analysis Error**\n\n"
@@ -448,7 +459,7 @@ User ID: `{user_id}`
                         buttons=self.keyboards.symbol_selection()
                     )
                     return
-                
+
                 # Save signal to database
                 await self.db.add_signal(
                     symbol=symbol,
@@ -459,16 +470,16 @@ User ID: `{user_id}`
                     stop_loss=signal['stop_loss'],
                     strength=signal['confidence']
                 )
-                
+
                 # Format result message
                 result_msg = self.format_analysis_result(data, signal, symbol, timeframe)
-                
+
                 # Show result with action buttons
                 await loading_msg.edit(
                     result_msg,
                     buttons=self.keyboards.signal_actions(symbol, signal['signal'])
                 )
-                
+
         except Exception as e:
             logger.error(f"Error performing analysis: {e}")
             await event.edit(
@@ -479,11 +490,12 @@ User ID: `{user_id}`
             )
     
     def format_analysis_result(self, data: Dict, signal: Dict, symbol: str, timeframe: str) -> str:
-        """Format analysis result into readable message"""
+        """Format analysis result into readable message, showing all numbers as received from API (no rounding or trimming)."""
         try:
             price_info = data.get('price', {})
-            current_price = price_info.get('current', 0)
-            change_24h = price_info.get('change', 0)
+            # Use string conversion to preserve all digits as in API response
+            current_price = str(price_info.get('current', ''))
+            change_24h = str(price_info.get('change', ''))
             
             direction = signal['signal']
             confidence = signal['confidence']
@@ -507,34 +519,38 @@ User ID: `{user_id}`
             else:
                 confidence_emoji = "📊"
             
+            # Entry, TP, SL, and risk/reward as string (no rounding)
+            entry_price = str(signal.get('entry_price', ''))
+            take_profit = str(signal.get('take_profit', ''))
+            stop_loss = str(signal.get('stop_loss', ''))
+            risk_reward = str(signal.get('risk_reward_ratio', ''))
+            # Confidence as string (no rounding)
+            confidence_str = str(confidence)
+            
             msg = f"""
 {direction_emoji} **{symbol} - {direction_text}**
 
 💰 **Price Info:**
-• Current: ${current_price:,.2f}
-• 24h Change: {change_24h:+.2f}%
+• Current: ${current_price}
+• 24h Change: {change_24h}%
 • Timeframe: {timeframe}
 
 🎯 **Trading Signal:**
-• Entry: ${signal['entry_price']:,.2f}
-• Take Profit: ${signal['take_profit']:,.2f}
-• Stop Loss: ${signal['stop_loss']:,.2f}
+• Entry: ${entry_price}
+• Take Profit: ${take_profit}
+• Stop Loss: ${stop_loss}
 
-{confidence_emoji} **Confidence:** {confidence:.1f}%
-📊 **Risk/Reward:** 1:{signal.get('risk_reward_ratio', 0):.2f}
+{confidence_emoji} **Confidence:** {confidence_str}%
+📊 **Risk/Reward:** 1:{risk_reward}
 
 **📈 Technical Analysis:**
 """
-            
             # Add analysis details
             analysis = signal.get('analysis', {})
             for indicator, result in analysis.items():
                 msg += f"• **{indicator.upper()}:** {result}\n"
-            
             msg += f"\n⏰ *Generated at {datetime.now().strftime('%H:%M:%S')}*"
-            
             return msg
-            
         except Exception as e:
             logger.error(f"Error formatting analysis result: {e}")
             return f"📊 **Analysis for {symbol}**\n\nError formatting result."
@@ -550,28 +566,28 @@ User ID: `{user_id}`
         """Handle interactive text input sessions"""
         user_id = event.sender_id
         session = self.user_sessions.get(user_id)
-        
+
         if not session:
             return
-        
+
         message_text = event.message.text.strip()
-        
+
         # Handle different session types
         if session.get('state') == 'waiting_custom_symbol':
             symbol = message_text.upper()
-            
+
             # Validate symbol
             if len(symbol) < 2 or len(symbol) > 10:
                 await event.reply("❌ Symbol tidak valid. Contoh: BTC, ETH, BNB")
                 return
-            
+
             # Add USDT if not present
             if not symbol.endswith('USDT'):
                 symbol += 'USDT'
-            
+
             # Update session and show timeframe selection
             session['symbol'] = symbol
-            await self.show_timeframe_selection(event, symbol)
+            await self.show_timeframe_selection(event, symbol, as_reply=True)
     
     async def handle_admin_callback(self, event, data: str):
         """Handle admin-specific callbacks"""

@@ -1160,8 +1160,7 @@ nano .env  # Fill API_ID, API_HASH, BOT_TOKEN, ADMIN_ID
 <table>
 <tr>
 <td align="center">
-<img src="https://cryptologos.cc/logos/tether-usdt-logo.png" alt="USDT" width="40" height="40" />
-<br>
+
 <strong>USDT (BEP20)</strong>
 <br>
 <code>0x1bc6e7d2e025f57ff79917f5e72561327b751105</code>
@@ -1195,12 +1194,7 @@ nano .env  # Fill API_ID, API_HASH, BOT_TOKEN, ADMIN_ID
 
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Star.png" alt="Star" width="15" height="15" />
-<img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Star.png" alt="Star" width="20" height="20" />
-<img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Star.png" alt="Star" width="25" height="25" />
 **Made with** <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Red%20Heart.png" alt="Heart" width="20" height="20" /> **by Crypto Trading Bot Team**
-<img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Star.png" alt="Star" width="25" height="25" />
-<img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Star.png" alt="Star" width="20" height="20" />
-<img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Star.png" alt="Star" width="15" height="15" />
+
 
 </div>
